@@ -66,7 +66,7 @@ function M.set_filter(filter_string)
     search_box:SetText(filter_string)
 end
 
-function M.search(query)
+function M.search(query, on_complete_callback)
 	if not query or query == '' then
 		aux.print('Usage: /aux search <query>')
 		return
@@ -75,6 +75,12 @@ function M.search(query)
 	aux.frame:Show()
 	aux.set_tab(1) -- Search tab
 	set_filter(query)
+	
+	-- Store the callback to be called when this specific search completes
+	if on_complete_callback then
+		set_pending_callback(on_complete_callback)
+	end
+	
 	execute(nil, false) -- execute(resume=nil, real_time=false) - start new search in normal mode
 end
 
