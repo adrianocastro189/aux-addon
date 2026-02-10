@@ -7,8 +7,23 @@ local filter_util = require 'aux.util.filter'
 local scan_util = require 'aux.util.scan'
 local scan = require 'aux.core.scan'
 local gui = require 'aux.gui'
+local export = require 'aux.util.export'
 
 search_scan_id = 0
+local on_complete_callbacks = {}
+
+function M.register_on_complete(callback)
+	tinsert(on_complete_callbacks, callback)
+end
+
+function M.unregister_on_complete(callback)
+	for i, cb in ipairs(on_complete_callbacks) do
+		if cb == callback then
+			tremove(on_complete_callbacks, i)
+			return
+		end
+	end
+end
 
 function aux.handle.LOAD()
 	new_search()
@@ -271,6 +286,14 @@ function start_search(queries, continuation)
 
 			search.active = false
 			update_start_stop()
+			
+			-- Export search results when scan completes
+			export.export_search_results(search.records)
+			
+			-- Call registered completion callbacks
+			for _, callback in ipairs(on_complete_callbacks) do
+				callback(search.records)
+			end
 		end,
 		on_abort = function()
 			search.status_bar:update_status(1, 1)
