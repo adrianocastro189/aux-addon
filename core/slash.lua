@@ -5,6 +5,7 @@ local aux = require 'aux'
 local info = require 'aux.util.info'
 local post = require 'aux.tabs.post'
 local purchase_summary = require 'aux.util.purchase_summary'
+local search = require 'aux.tabs.search'
 
 function status(enabled)
 	return (enabled and aux.color.green'on' or aux.color.red'off')
@@ -84,6 +85,10 @@ function SlashCmdList.AUX(command)
 		if not aux.account_data.purchase_summary then
 			purchase_summary.hide()
 		end
+	elseif arguments[1] == 'search' then
+		-- Extract query after 'search ' (command word + space)
+		local query = aux.trim(strsub(command, strlen(arguments[1]) + 2) or '')
+		search.search(query)
 	else
 		aux.print('Usage:')
 		aux.print('- scale [' .. aux.color.blue(aux.account_data.scale) .. ']')
@@ -106,5 +111,6 @@ function SlashCmdList.AUX(command)
             aux.color[aux.account_data.theme == 'modern' and 'green' or 'red']('modern') .. ']')
 		aux.print('- show hidden [' .. status(aux.account_data.showhidden) .. ']')
 		aux.print('- purchase summary [' .. status(aux.account_data.purchase_summary) .. ']')
+		aux.print('- search <query>')
     end
 end

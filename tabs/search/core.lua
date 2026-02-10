@@ -66,6 +66,18 @@ function M.set_filter(filter_string)
     search_box:SetText(filter_string)
 end
 
+function M.search(query)
+	if not query or query == '' then
+		aux.print('Usage: /aux search <query>')
+		return
+	end
+	
+	aux.frame:Show()
+	aux.set_tab(1) -- Search tab
+	set_filter(query)
+	execute(nil, false) -- execute(resume=nil, real_time=false) - start new search in normal mode
+end
+
 function add_filter(filter_string)
     local old_filter_string = search_box:GetText()
     old_filter_string = aux.trim(old_filter_string)
@@ -81,5 +93,9 @@ function blizzard_page_index(str)
     if tonumber(str) then
         return max(0, tonumber(str) - 1)
     end
+end
+
+function aux.handle.LOAD2()
+	_G.Aux_Search = search
 end
 
