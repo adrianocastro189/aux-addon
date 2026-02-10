@@ -44,7 +44,7 @@ function aux.handle.INIT_UI()
 
     -- Logout checkbox
     logout_checkbox = gui.checkbox(frame)
-    logout_checkbox:SetPoint('BOTTOMLEFT', status_label, 'BOTTOMRIGHT', 10, -5)
+    logout_checkbox:SetPoint('BOTTOMLEFT', content, 'BOTTOMLEFT', 200, 5)
     
     local logout_label = frame:CreateFontString(nil, 'OVERLAY', 'GameFontNormal')
     logout_label:SetPoint('LEFT', logout_checkbox, 'RIGHT', 0, 0)

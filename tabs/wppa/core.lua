@@ -52,7 +52,7 @@ function M.start_queries()
     process_next_query()
 end
 
-function process_next_query()
+local function process_next_query()
     current_index = current_index + 1
     
     if current_index > getn(query_list) then
@@ -78,12 +78,12 @@ function process_next_query()
     -- Execute search with callback for next query
     Aux_Search(query .. '/exact', function()
         -- This callback is called when the search completes
-        -- Process the next query after a small delay to ensure the search is fully complete
+        -- Process the next query sequentially
         process_next_query()
     end)
 end
 
-function update_status()
+local function update_status()
     if is_running then
         status_label:SetText(format('Processing: %d / %d', current_index, getn(query_list)))
     else
