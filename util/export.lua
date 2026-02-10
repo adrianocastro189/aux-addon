@@ -4,10 +4,6 @@ local aux = require 'aux'
 local info = require 'aux.util.info'
 
 function M.export_search_results(search_records)
-    if not _G.aux_export then
-        _G.aux_export = {}
-    end
-    
     -- Group records by item name
     local items_map = {}
     for _, record in ipairs(search_records) do
