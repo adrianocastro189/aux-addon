@@ -12,43 +12,30 @@ function aux.handle.INIT_UI()
     local content = gui.panel(frame)
     content:SetAllPoints(aux.frame.content)
 
-    -- Create multiline edit box
-    local scroll_frame = CreateFrame('ScrollFrame', nil, content)
+    -- Create multiline edit box with scrollable area
+    local scroll_frame = CreateFrame('ScrollFrame', nil, content, 'UIPanelScrollFrameTemplate')
     scroll_frame:SetPoint('TOPLEFT', content, 'TOPLEFT', 5, -5)
-    scroll_frame:SetPoint('BOTTOMRIGHT', content, 'BOTTOMRIGHT', -5, 40)
+    scroll_frame:SetPoint('BOTTOMRIGHT', content, 'BOTTOMRIGHT', -25, 40)
 
     edit_box = CreateFrame('EditBox', nil, scroll_frame)
     edit_box:SetMultiLine(true)
     edit_box:SetAutoFocus(false)
     edit_box:SetFontObject(GameFontHighlight)
     edit_box:SetWidth(scroll_frame:GetWidth())
-    
-    -- Create a background for the edit box
-    local bg = edit_box:CreateTexture(nil, 'BACKGROUND')
-    bg:SetAllPoints()
-    bg:SetTexture(0, 0, 0, 0.5)
+    edit_box:SetScript('OnEscapePressed', function() this:ClearFocus() end)
+    edit_box:SetScript('OnTextChanged', function()
+        -- Adjust height based on content
+        local _, font_height = this:GetFont()
+        local num_lines = 1
+        local text = this:GetText()
+        for _ in string.gfind(text, '\n') do
+            num_lines = num_lines + 1
+        end
+        local height = max(scroll_frame:GetHeight(), num_lines * (font_height + 2) + 10)
+        this:SetHeight(height)
+    end)
     
     scroll_frame:SetScrollChild(edit_box)
-    
-    -- Enable scroll on mouse wheel
-    scroll_frame:EnableMouseWheel(true)
-    scroll_frame:SetScript('OnMouseWheel', function()
-        local scroll_offset = scroll_frame:GetVerticalScroll()
-        local scroll_step = 20
-        if arg1 > 0 then
-            scroll_offset = max(0, scroll_offset - scroll_step)
-        else
-            scroll_offset = scroll_offset + scroll_step
-        end
-        scroll_frame:SetVerticalScroll(scroll_offset)
-    end)
-    
-    -- Set up text changed handler to update scroll child height
-    edit_box:SetScript('OnTextChanged', function()
-        local text = edit_box:GetText()
-        local height = edit_box:GetHeight()
-        edit_box:SetHeight(max(scroll_frame:GetHeight(), height))
-    end)
 
     -- Status label at the bottom
     status_label = frame:CreateFontString(nil, 'OVERLAY', 'GameFontNormal')
@@ -56,10 +43,8 @@ function aux.handle.INIT_UI()
     status_label:SetText('Ready')
 
     -- Logout checkbox
-    logout_checkbox = CreateFrame('CheckButton', nil, frame, 'UICheckButtonTemplate')
+    logout_checkbox = gui.checkbox(frame)
     logout_checkbox:SetPoint('BOTTOMLEFT', status_label, 'BOTTOMRIGHT', 10, -5)
-    logout_checkbox:SetWidth(24)
-    logout_checkbox:SetHeight(24)
     
     local logout_label = frame:CreateFontString(nil, 'OVERLAY', 'GameFontNormal')
     logout_label:SetPoint('LEFT', logout_checkbox, 'RIGHT', 0, 0)
