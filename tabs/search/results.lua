@@ -7,8 +7,28 @@ local filter_util = require 'aux.util.filter'
 local scan_util = require 'aux.util.scan'
 local scan = require 'aux.core.scan'
 local gui = require 'aux.gui'
+local export = require 'aux.util.export'
 
 search_scan_id = 0
+local on_complete_callbacks = {}
+local pending_search_callback = nil
+
+function M.set_pending_callback(callback)
+	pending_search_callback = callback
+end
+
+function M.register_on_complete(callback)
+	tinsert(on_complete_callbacks, callback)
+end
+
+function M.unregister_on_complete(callback)
+	for i, cb in ipairs(on_complete_callbacks) do
+		if cb == callback then
+			tremove(on_complete_callbacks, i)
+			return
+		end
+	end
+end
 
 function aux.handle.LOAD()
 	new_search()
@@ -271,6 +291,19 @@ function start_search(queries, continuation)
 
 			search.active = false
 			update_start_stop()
+			
+			-- Export search results when scan completes
+			export.export_search_results(search.records)
+			
+			-- Call this search's specific callback if set
+			if search.on_complete_callback then
+				search.on_complete_callback(search.records)
+			end
+			
+			-- Call registered completion callbacks
+			for _, callback in ipairs(on_complete_callbacks) do
+				callback(search.records)
+			end
 		end,
 		on_abort = function()
 			search.status_bar:update_status(1, 1)
@@ -340,6 +373,12 @@ function M.execute(resume, real_time)
 		search.real_time = real_time
 		search.auto_buy_validator = get_auto_buy_validator()
 		search.auto_bid_validator = get_auto_bid_validator()
+		
+		-- Attach pending callback if set
+		if pending_search_callback then
+			search.on_complete_callback = pending_search_callback
+			pending_search_callback = nil
+		end
 	end
 
 	local continuation = resume and current_search().continuation
