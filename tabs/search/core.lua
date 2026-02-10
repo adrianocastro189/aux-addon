@@ -75,7 +75,7 @@ function M.search(query)
 	aux.frame:Show()
 	aux.set_tab(1) -- Search tab
 	set_filter(query)
-	execute(nil, false)
+	execute(nil, false) -- Start new search in normal mode (not resume, not real-time)
 end
 
 function add_filter(filter_string)
