@@ -86,7 +86,7 @@ function SlashCmdList.AUX(command)
 			purchase_summary.hide()
 		end
 	elseif arguments[1] == 'search' then
-		local query = aux.trim(strsub(command, strlen('search ') + 1) or '')
+		local query = aux.trim(strsub(command, strlen(arguments[1]) + 2) or '')
 		search.search(query)
 	else
 		aux.print('Usage:')
