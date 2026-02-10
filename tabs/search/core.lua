@@ -73,7 +73,7 @@ function M.search(query)
 	end
 	
 	aux.frame:Show()
-	aux.set_tab(1)
+	aux.set_tab(1) -- Search tab
 	set_filter(query)
 	execute(nil, false)
 end
