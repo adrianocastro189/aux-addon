@@ -95,5 +95,7 @@ function blizzard_page_index(str)
     end
 end
 
-_G.Aux_Search = M.search
+function aux.handle.LOAD2()
+	_G.Aux_Search = M.search
+end
 
