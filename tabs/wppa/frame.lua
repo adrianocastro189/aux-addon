@@ -13,15 +13,28 @@ function aux.handle.INIT_UI()
     content:SetAllPoints(aux.frame.content)
 
     -- Create multiline edit box with scrollable area
-    local scroll_frame = CreateFrame('ScrollFrame', nil, content, 'UIPanelScrollFrameTemplate')
+    local scroll_frame = CreateFrame('ScrollFrame', nil, content)
     scroll_frame:SetPoint('TOPLEFT', content, 'TOPLEFT', 5, -5)
-    scroll_frame:SetPoint('BOTTOMRIGHT', content, 'BOTTOMRIGHT', -25, 40)
+    scroll_frame:SetPoint('BOTTOMRIGHT', content, 'BOTTOMRIGHT', -5, 40)
+    scroll_frame:EnableMouse(true)
+    scroll_frame:EnableMouseWheel(true)
+    scroll_frame:SetScript('OnMouseWheel', function()
+        local current_scroll = this:GetVerticalScroll()
+        local scroll_step = 20
+        if arg1 > 0 then
+            current_scroll = max(0, current_scroll - scroll_step)
+        else
+            current_scroll = current_scroll + scroll_step
+        end
+        this:SetVerticalScroll(current_scroll)
+    end)
+    gui.set_content_style(scroll_frame)
 
     edit_box = CreateFrame('EditBox', nil, scroll_frame)
     edit_box:SetMultiLine(true)
     edit_box:SetAutoFocus(false)
     edit_box:SetFontObject(GameFontHighlight)
-    edit_box:SetWidth(scroll_frame:GetWidth())
+    edit_box:SetWidth(scroll_frame:GetWidth() - 10)
     edit_box:SetScript('OnEscapePressed', function() this:ClearFocus() end)
     edit_box:SetScript('OnTextChanged', function()
         -- Adjust height based on content
