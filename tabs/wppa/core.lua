@@ -21,7 +21,7 @@ function tab.CLOSE()
     frame:Hide()
 end
 
-function M.start_queries()
+function M.start_queries(should_logout)
     if is_running then return end
     
     local text = edit_box:GetText()
@@ -44,13 +44,14 @@ function M.start_queries()
     end
     
     -- Store logout preference
-    logout_when_finished = logout_checkbox:GetChecked()
+    logout_when_finished = should_logout
     
     -- Start processing
     is_running = true
     current_index = 0
     update_status()
     run_button:Disable()
+    run_logout_button:Disable()
     
     -- Start the first query
     process_next_query()
@@ -64,6 +65,7 @@ function process_next_query()
         is_running = false
         update_status()
         run_button:Enable()
+        run_logout_button:Enable()
         
         aux.print('WPPA: All queries complete')
         

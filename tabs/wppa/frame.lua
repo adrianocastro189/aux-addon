@@ -14,8 +14,8 @@ function aux.handle.INIT_UI()
 
     -- Create multiline edit box with scrollable area
     local scroll_frame = CreateFrame('ScrollFrame', nil, content)
-    scroll_frame:SetPoint('TOPLEFT', content, 'TOPLEFT', 5, -5)
-    scroll_frame:SetPoint('BOTTOMRIGHT', content, 'BOTTOMRIGHT', -5, 40)
+    scroll_frame:SetPoint('TOPLEFT', content, 'TOPLEFT', 5, -35)
+    scroll_frame:SetPoint('BOTTOMRIGHT', content, 'BOTTOMRIGHT', -5, 35)
     scroll_frame:EnableMouse(true)
     scroll_frame:EnableMouseWheel(true)
     scroll_frame:SetScript('OnMouseWheel', function()
@@ -52,21 +52,20 @@ function aux.handle.INIT_UI()
 
     -- Status label at the bottom
     status_label = frame:CreateFontString(nil, 'OVERLAY', 'GameFontNormal')
-    status_label:SetPoint('BOTTOMLEFT', content, 'BOTTOMLEFT', 5, 5)
+    status_label:SetPoint('BOTTOMLEFT', content, 'BOTTOMLEFT', 5, 10)
     status_label:SetText('Ready')
 
-    -- Logout checkbox
-    logout_checkbox = gui.checkbox(frame)
-    logout_checkbox:SetPoint('BOTTOMLEFT', content, 'BOTTOMLEFT', 200, 5)
-    
-    local logout_label = frame:CreateFontString(nil, 'OVERLAY', 'GameFontNormal')
-    logout_label:SetPoint('LEFT', logout_checkbox, 'RIGHT', 0, 0)
-    logout_label:SetText('Logout when finished')
-
-    -- Run button
+    -- Run button (without logout)
     run_button = gui.button(frame)
-    run_button:SetPoint('LEFT', logout_label, 'RIGHT', 10, 0)
-    gui.set_size(run_button, 60, 24)
+    run_button:SetPoint('TOPRIGHT', content, 'TOPRIGHT', -5, -5)
+    gui.set_size(run_button, 80, 24)
     run_button:SetText('Run')
-    run_button:SetScript('OnClick', start_queries)
+    run_button:SetScript('OnClick', function() start_queries(false) end)
+    
+    -- Run with logout button
+    run_logout_button = gui.button(frame)
+    run_logout_button:SetPoint('TOPRIGHT', run_button, 'TOPLEFT', -5, 0)
+    gui.set_size(run_logout_button, 160, 24)
+    run_logout_button:SetText('Run (logoff when done)')
+    run_logout_button:SetScript('OnClick', function() start_queries(true) end)
 end
