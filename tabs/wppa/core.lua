@@ -9,6 +9,10 @@ local current_index = 0
 local is_running = false
 local logout_when_finished = false
 
+-- Forward declarations
+local update_status
+local process_next_query
+
 function tab.OPEN()
     frame:Show()
 end
@@ -52,7 +56,7 @@ function M.start_queries()
     process_next_query()
 end
 
-local function process_next_query()
+function process_next_query()
     current_index = current_index + 1
     
     if current_index > getn(query_list) then
@@ -83,7 +87,7 @@ local function process_next_query()
     end)
 end
 
-local function update_status()
+function update_status()
     if is_running then
         status_label:SetText(format('Processing: %d / %d', current_index, getn(query_list)))
     else
