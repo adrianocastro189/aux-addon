@@ -14,9 +14,10 @@ function M.export_search_results(search_records)
         tinsert(items_map[item_name], record)
     end
     
-    -- Clear previous export data and export each item's records
-    _G.aux_export = {}
+    -- Initialize aux_export if it doesn't exist
+    _G.aux_export = _G.aux_export or {}
     
+    -- Replace data only for items in the current search
     for item_name, records in pairs(items_map) do
         _G.aux_export[item_name] = {}
         
