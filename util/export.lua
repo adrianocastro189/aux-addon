@@ -15,9 +15,7 @@ function M.export_search_results(search_records)
     end
     
     -- Initialize aux_export if it doesn't exist
-    if not _G.aux_export then
-        _G.aux_export = {}
-    end
+    _G.aux_export = _G.aux_export or {}
     
     -- Replace data only for items in the current search
     for item_name, records in pairs(items_map) do
