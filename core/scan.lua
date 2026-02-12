@@ -101,9 +101,8 @@ do
 		else
 			get_state().last_list_query = GetTime()
 			local blizzard_query = get_query().blizzard_query or T.acquire()
-			local escaped_name = blizzard_query.name and gsub(blizzard_query.name, "'", "") or nil
 			QueryAuctionItems(
-				escaped_name,
+				blizzard_query.name,
 				blizzard_query.min_level,
 				blizzard_query.max_level,
 				blizzard_query.slot,

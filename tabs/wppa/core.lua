@@ -1,6 +1,7 @@
 module 'aux.tabs.wppa'
 
 local aux = require 'aux'
+local filter_util = require 'aux.util.filter'
 
 local tab = aux.tab 'WPPA'
 
@@ -81,8 +82,12 @@ function process_next_query()
     local query = query_list[current_index]
     update_status()
     
+    -- Wrap query in angle brackets if it contains special characters like apostrophes
+    -- This ensures proper parsing when combined with /exact modifier
+    local quoted_query = filter_util.quote(query)
+    
     -- Execute search with callback for next query
-    Aux_Search(query .. '/exact', function()
+    Aux_Search(quoted_query .. '/exact', function()
         -- This callback is called when the search completes
         -- Process the next query sequentially
         process_next_query()
