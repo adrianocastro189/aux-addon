@@ -538,7 +538,10 @@ end
 
 function blizzard_query(filter)
     local filters = filter.blizzard
-    local query = T.map('name', filters.name)
+    -- Strip apostrophes from the name for the Blizzard API query
+    -- The validator will still use the original name with apostrophes
+    local query_name = filters.name and gsub(filters.name, "'", "") or nil
+    local query = T.map('name', query_name)
     local item_id = filters.name and info.item_id(filters.name)
     local item_info = item_id and info.item(item_id)
     if filters.exact and item_info then
