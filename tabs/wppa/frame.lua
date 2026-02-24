@@ -68,4 +68,11 @@ function aux.handle.INIT_UI()
     gui.set_size(run_logout_button, 160, 24)
     run_logout_button:SetText('Run (logoff when done)')
     run_logout_button:SetScript('OnClick', function() start_queries(true) end)
+
+    -- Buy Shopping List button
+    buy_button = gui.button(frame)
+    buy_button:SetPoint('TOPRIGHT', run_logout_button, 'TOPLEFT', -5, 0)
+    gui.set_size(buy_button, 130, 24)
+    buy_button:SetText('Buy Shopping List')
+    buy_button:SetScript('OnClick', function() start_shopping_list() end)
 end
