@@ -113,8 +113,8 @@ function M.start_shopping_list()
             local parts = aux.split(trimmed, ';')
             if getn(parts) == 3 then
                 local name = aux.trim(parts[1])
-                local max_qty = tonumber(aux.trim(parts[2]))
-                local max_gold = tonumber(aux.trim(parts[3]))
+                local max_qty = tonumber((aux.trim(parts[2])))
+                local max_gold = tonumber((aux.trim(parts[3])))
                 if name ~= '' and max_qty and max_qty > 0 and max_gold and max_gold > 0 then
                     tinsert(shopping_list, {name=name, max_qty=max_qty, max_gold=max_gold})
                 else
