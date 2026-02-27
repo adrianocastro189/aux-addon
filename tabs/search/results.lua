@@ -295,9 +295,12 @@ function start_search(queries, continuation)
 			-- Export search results when scan completes
 			export.export_search_results(search.records)
 			
-			-- Call this search's specific callback if set
+			-- Call this search's specific callback if set, then clear it so it
+			-- does not fire again if the user performs another search afterwards.
 			if search.on_complete_callback then
-				search.on_complete_callback(search.records)
+				local cb = search.on_complete_callback
+				search.on_complete_callback = nil
+				cb(search.records)
 			end
 			
 			-- Call registered completion callbacks
