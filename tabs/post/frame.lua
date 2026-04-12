@@ -319,6 +319,25 @@ function aux.handle.INIT_UI()
         editbox.focus_loss = function()
             this:SetText(money.to_string(get_unit_buyout_price(), true, nil, nil, true))
         end
+        editbox:SetScript('OnMouseDown', function()
+            if arg1 == 'LeftButton' then
+                if IsAltKeyDown() then
+                    this.block_focus = true
+                    decrease_price_alt_click()
+                    return
+                elseif IsControlKeyDown() then
+                    this.block_focus = true
+                    decrease_price_ctrl_click()
+                    return
+                elseif IsShiftKeyDown() then
+                    this.block_focus = true
+                    decrease_price_shift_click()
+                    return
+                end
+            end
+            -- Comportamento padrão de foco
+            this.block_focus = false
+        end)
         do
             local label = gui.label(editbox, gui.font_size.small)
             label:SetPoint('BOTTOMLEFT', editbox, 'TOPLEFT', -2, 1)

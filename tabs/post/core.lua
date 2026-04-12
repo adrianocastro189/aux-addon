@@ -643,3 +643,77 @@ function initialize_duration_dropdown()
         func = on_click,
     }
 end
+
+function apply_price_change(new_price)
+    -- Atualizar buyout price
+    set_unit_buyout_price(new_price)
+    unit_buyout_price_input:SetText(money.to_string(new_price, true, nil, nil, true))
+
+    -- Atualizar start price para igualar o buyout
+    set_unit_start_price(new_price)
+    unit_start_price_input:SetText(money.to_string(new_price, true, nil, nil, true))
+
+    -- Atualizar seleções
+    set_bid_selection()
+    set_buyout_selection()
+
+    refresh = true
+end
+
+function M.decrease_price_alt_click()
+    if not selected_item then return end
+
+    local current_price = get_unit_buyout_price()
+    if current_price <= 0 then return end
+
+    local new_price = current_price - 1
+    if new_price < 0 then return end
+
+    apply_price_change(new_price)
+end
+
+function M.decrease_price_ctrl_click()
+    if not selected_item then return end
+
+    local current_price = get_unit_buyout_price()
+    if current_price <= 0 then return end
+
+    local new_price = current_price - 500
+    if new_price < 0 then return end
+
+    apply_price_change(new_price)
+end
+
+function M.decrease_price_shift_click()
+    if not selected_item then return end
+
+    local current_price = get_unit_buyout_price()
+    if current_price <= 0 then return end
+
+    local gold, silver, copper = money.to_gsc(current_price)
+    local new_price
+
+    if gold > 0 and silver == 0 and copper == 0 then
+        -- Caso especial: valor exato em gold (ex: 1g 0s 0c → 99s 99c)
+        new_price = current_price - 1
+    elseif gold > 0 and silver == 1 then
+        -- Caso: 1g 1s Xc → 99s 99c
+        new_price = money.from_gsc(gold - 1, 99, 99)
+    elseif gold == 0 and silver < 10 then
+        -- Menos de 10 silver (não tem dezena anterior)
+        return
+    else
+        -- Caso normal: ir para dezena anterior máxima
+        -- 52s → 49s 99c, 89s → 79s 99c, 1g 52s → 1g 49s 99c
+        local target_silver = floor(silver / 10) * 10 - 1
+        if target_silver < 0 then
+            target_silver = 99
+            gold = gold - 1
+        end
+        new_price = money.from_gsc(gold, target_silver, 99)
+    end
+
+    if new_price < 0 then return end
+
+    apply_price_change(new_price)
+end
