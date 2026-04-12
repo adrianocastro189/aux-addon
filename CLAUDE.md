@@ -163,6 +163,18 @@ felcloth/exact/stack/5
 - Market value = median of last 11 daily values (weighted by age)
 - Stored per-faction in `faction_data.history`
 
+### Post Tab Price Adjustment
+
+The Unit Buyout Price field in the Post tab supports modifier-click shortcuts for quick price adjustments:
+
+| Modifier    | Action           | Example                 |
+| ----------- | ---------------- | ----------------------- |
+| Alt+Click   | Decrease by 1c   | 1g 52s 31c → 1g 52s 30c |
+| Ctrl+Click  | Decrease by 5s   | 1g 52s 31c → 1g 47s 31c |
+| Shift+Click | Previous ten max | 1g 52s 31c → 1g 49s 99c |
+
+When any modifier-click is used, the Unit Starting Price is also updated to match the buyout price.
+
 ### Slash Commands
 
 Key commands for testing:

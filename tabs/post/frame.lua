@@ -335,7 +335,7 @@ function aux.handle.INIT_UI()
                     return
                 end
             end
-            -- Comportamento padrão de foco
+            -- Default focus behavior
             this.block_focus = false
         end)
         editbox:SetScript('OnEnter', function()

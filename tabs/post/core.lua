@@ -645,15 +645,15 @@ function initialize_duration_dropdown()
 end
 
 function apply_price_change(new_price)
-    -- Atualizar buyout price
+    -- Update buyout price
     set_unit_buyout_price(new_price)
     unit_buyout_price_input:SetText(money.to_string(new_price, true, nil, nil, true))
 
-    -- Atualizar start price para igualar o buyout
+    -- Update start price to match buyout
     set_unit_start_price(new_price)
     unit_start_price_input:SetText(money.to_string(new_price, true, nil, nil, true))
 
-    -- Atualizar seleções
+    -- Update selections
     set_bid_selection()
     set_buyout_selection()
 
@@ -694,16 +694,16 @@ function M.decrease_price_shift_click()
     local new_price
 
     if gold > 0 and silver == 0 and copper == 0 then
-        -- Caso especial: valor exato em gold (ex: 1g 0s 0c → 99s 99c)
+        -- Special case: exact gold amount (e.g., 1g 0s 0c → 99s 99c)
         new_price = current_price - 1
     elseif gold > 0 and silver == 1 then
-        -- Caso: 1g 1s Xc → 99s 99c
+        -- Case: 1g 1s Xc → 99s 99c
         new_price = money.from_gsc(gold - 1, 99, 99)
     elseif gold == 0 and silver < 10 then
-        -- Menos de 10 silver (não tem dezena anterior)
+        -- Less than 10 silver (no previous ten)
         return
     else
-        -- Caso normal: ir para dezena anterior máxima
+        -- Normal case: go to max of previous ten
         -- 52s → 49s 99c, 89s → 79s 99c, 1g 52s → 1g 49s 99c
         local target_silver = floor(silver / 10) * 10 - 1
         if target_silver < 0 then
