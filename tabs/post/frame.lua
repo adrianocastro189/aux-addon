@@ -319,6 +319,36 @@ function aux.handle.INIT_UI()
         editbox.focus_loss = function()
             this:SetText(money.to_string(get_unit_buyout_price(), true, nil, nil, true))
         end
+        editbox:SetScript('OnMouseDown', function()
+            if arg1 == 'LeftButton' then
+                if IsAltKeyDown() then
+                    this.block_focus = true
+                    decrease_price_alt_click()
+                    return
+                elseif IsControlKeyDown() then
+                    this.block_focus = true
+                    decrease_price_ctrl_click()
+                    return
+                elseif IsShiftKeyDown() then
+                    this.block_focus = true
+                    decrease_price_shift_click()
+                    return
+                end
+            end
+            -- Default focus behavior
+            this.block_focus = false
+        end)
+        editbox:SetScript('OnEnter', function()
+            GameTooltip:SetOwner(this, 'ANCHOR_RIGHT')
+            GameTooltip:AddLine('Adjust Price', 1, 1, 1)
+            GameTooltip:AddLine('Alt+Click: -1c', 0.8, 0.8, 0.8)
+            GameTooltip:AddLine('Ctrl+Click: -5s', 0.8, 0.8, 0.8)
+            GameTooltip:AddLine('Shift+Click: Previous ten (e.g., 52s → 49s 99c)', 0.8, 0.8, 0.8)
+            GameTooltip:Show()
+        end)
+        editbox:SetScript('OnLeave', function()
+            GameTooltip:Hide()
+        end)
         do
             local label = gui.label(editbox, gui.font_size.small)
             label:SetPoint('BOTTOMLEFT', editbox, 'TOPLEFT', -2, 1)
